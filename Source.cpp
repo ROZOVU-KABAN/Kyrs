@@ -3,12 +3,6 @@
 #include <fstream>
 
 
-void Draw(List<Student>& l)
-{
-
-}
-
-
 int main()
 {
 	Student stud;

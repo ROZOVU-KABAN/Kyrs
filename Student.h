@@ -28,6 +28,7 @@ public:
 	void ReadInfoFormFile(char fn[],char sn[], char FielName[]);
 	void ChangeInfoName(char FielName[]);
 	void ChangeInfoNum(char FielName[]);
+	void DeleteStudent(char FielName[]);
 
 	Student* Get_info();
 	char* Get_Dep() { return department; }
@@ -292,7 +293,6 @@ inline void Student::ReadInfoFormFile(char fn[], char sn[], char FielName[])
 
 inline void Student::ChangeInfoName(char FielName[])
 {
-	int numSubinOneSes;
 	Student stud;
 	std::fstream fin;
 	fin.open(FielName, std::ios_base::binary | std::ios_base::in | std::ios_base::out);
@@ -448,6 +448,98 @@ inline void Student::ChangeInfoNum(char FielName[])
 		fin.write((char*)&year, sizeof(int));
 	}
 	fin.close();
+}
+
+inline void Student::DeleteStudent(char FielName[])
+{
+	Student stud;
+	std::ofstream fout;
+	std::ifstream fin;
+	char fiel[] = "FIEL.txt";
+	fout.open(fiel, std::ios_base::binary);
+	fin.open(FielName, std::ios_base::binary);
+	if(!fin.is_open())
+	{
+		std::cout << "Error open file" << std::endl;
+		return;
+	}
+	else
+	{
+		if (!fout.is_open())
+		{
+			std::cout << "Error open file" << std::endl;
+			return;
+		}
+		else
+		{
+			while (!fin.eof())
+			{
+				fin.read((char*)&stud.department, 20);
+				fin.read((char*)&stud.faculty, 40);
+				fin.read((char*)&stud.group, 10);
+				fin.read((char*)&stud.number, 20);
+				fin.read((char*)&stud.first_name, 30);
+				fin.read((char*)&stud.second_name, 30);
+				fin.read((char*)&stud.thired_name, 30);
+				fin.read((char*)&stud.enter_year, sizeof(unsigned int));
+				fin.read((char*)&stud.flor, 10);
+				for (int i = 0; i < 9; i++)
+				{
+					Subject sub[10];
+					for (int j = 0; j < 10; j++)
+					{
+						char ch[30];
+						char c;
+						fin.read((char*)&ch, 30);
+						fin.read((char*)&c, sizeof(char));
+						sub[j].Set_All(ch, c);
+					}
+					stud.session[i].Set_Session(sub);
+				}
+
+				int day, month, year;
+				fin.read((char*)&day, sizeof(int));
+				fin.read((char*)&month, sizeof(int));
+				fin.read((char*)&year, sizeof(int));
+				stud.Data.Set_Data(day, month, year);
+				if (stud.number != number)
+				{
+					fout.write((char*)&department, 20);
+					fout.write((char*)&faculty, 40);
+					fout.write((char*)&group, 10);
+					fout.write((char*)&number, 20);
+					fout.write((char*)&first_name, 30);
+					fout.write((char*)&second_name, 30);
+					fout.write((char*)&thired_name, 30);
+					fout.write((char*)&enter_year, sizeof(unsigned int));
+					fout.write((char*)&flor, 10);
+					for (int i = 0; i < 9; i++)
+					{
+						for (int j = 0; j < 10; j++)
+						{
+							Subject sub = session[i].Get_Sub(j);
+							char* ch = sub.Get_SubName();
+							char CH[30];
+							strncpy_s(CH, ch, 30);
+							char c = sub.Get_Mark();
+							fout.write((char*)&CH, 30);
+							fout.write((char*)&c, sizeof(char));
+						}
+					}
+					int day = Data.Get_Day();
+					int month = Data.Get_Month();
+					int year = Data.Get_Year();
+					fout.write((char*)&day, sizeof(int));
+					fout.write((char*)&month, sizeof(int));
+					fout.write((char*)&year, sizeof(int));
+				}
+			}
+		}
+	}
+	fin.close();
+	remove(FielName);
+	rename(fiel, FielName);
+	fout.close();
 }
 
 inline Student* Student::Get_info()

@@ -133,7 +133,6 @@
   <ItemGroup>
     <ClInclude Include="Burn.h" />
     <ClInclude Include="Libruaries.h" />
-    <ClInclude Include="Menu.h" />
     <ClInclude Include="My_List.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Student.h" />
