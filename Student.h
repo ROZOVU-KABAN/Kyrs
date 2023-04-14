@@ -3,7 +3,7 @@
 #include <fstream>
 #include "Libruaries.h"
 #include "Session.h"
-
+#include "My_List.h"
 class Student
 {
 public:
@@ -23,12 +23,13 @@ public:
 	void Set_Data(Burn& data);
 	void Set_Ses(Session ses[]);
 
-	void WriteInfoIntoFile(char FileName[]);
-	void ReadInfoFormFile(char number[], char FielName[]);
-	void ReadInfoFormFile(char fn[],char sn[], char FielName[]);
-	void ChangeInfoName(char FielName[]);
-	void ChangeInfoNum(char FielName[]);
-	void DeleteStudent(char FielName[]);
+	void WriteInfoIntoFile(const char FileName[]);
+	void ReadInfoFormFile(char number[], const char FielName[]);
+	void ReadInfoFormFile(char fn[],char sn[], const char FielName[]);
+	void ChangeInfoName(const char FielName[]);
+	void ChangeInfoNum(const char FielName[]);
+	void DeleteStudent(const char FielName[]);
+	void ReadAllStud(List<Student>& l,const char FielName[]);
 
 	Student* Get_info();
 	char* Get_Dep() { return department; }
@@ -162,7 +163,7 @@ inline void Student::Set_Ses(Session ses[])
 	}
 }
 
-inline void Student::WriteInfoIntoFile(char FileName[])
+inline void Student::WriteInfoIntoFile(const char FileName[])
 {
 	std::ofstream fout;
 	fout.open(FileName, std::ios_base::app | std::ios_base::binary);
@@ -199,7 +200,7 @@ inline void Student::WriteInfoIntoFile(char FileName[])
 	fout.close();
 }
 
-inline void Student::ReadInfoFormFile(char number[], char FielName[])
+inline void Student::ReadInfoFormFile(char number[], const char FielName[])
 {
 	std::ifstream fin;
 	fin.open(FielName, std::ios_base::binary);
@@ -245,7 +246,7 @@ inline void Student::ReadInfoFormFile(char number[], char FielName[])
 	fin.close();
 }
 
-inline void Student::ReadInfoFormFile(char fn[], char sn[], char FielName[])
+inline void Student::ReadInfoFormFile(char fn[], char sn[], const char FielName[])
 {
 	std::ifstream fin;
 	fin.open(FielName,std::ios_base::binary);
@@ -291,7 +292,7 @@ inline void Student::ReadInfoFormFile(char fn[], char sn[], char FielName[])
 	fin.close();
 }
 
-inline void Student::ChangeInfoName(char FielName[])
+inline void Student::ChangeInfoName(const char FielName[])
 {
 	Student stud;
 	std::fstream fin;
@@ -370,7 +371,7 @@ inline void Student::ChangeInfoName(char FielName[])
 	}
 }
 
-inline void Student::ChangeInfoNum(char FielName[])
+inline void Student::ChangeInfoNum(const char FielName[])
 {
 	int numSubinOneSes;
 	Student stud;
@@ -450,7 +451,7 @@ inline void Student::ChangeInfoNum(char FielName[])
 	fin.close();
 }
 
-inline void Student::DeleteStudent(char FielName[])
+inline void Student::DeleteStudent(const char FielName[])
 {
 	Student stud;
 	std::ofstream fout;
@@ -542,6 +543,45 @@ inline void Student::DeleteStudent(char FielName[])
 	fout.close();
 }
 
+inline void Student::ReadAllStud(List<Student>& l, const char FielName[])
+{
+	Student stud;
+	std::ifstream fin;
+	fin.open(FielName, std::ios_base::binary);
+	while (!fin.eof())
+	{
+		fin.read((char*)&stud.department, 20);
+		fin.read((char*)&stud.faculty, 40);
+		fin.read((char*)&stud.group, 10);
+		fin.read((char*)&stud.number, 20);
+		fin.read((char*)&stud.first_name, 30);
+		fin.read((char*)&stud.second_name, 30);
+		fin.read((char*)&stud.thired_name, 30);
+		fin.read((char*)&stud.enter_year, sizeof(unsigned int));
+		fin.read((char*)&stud.flor, 10);
+		for (int i = 0; i < 9; i++)
+		{
+			Subject sub[10];
+			for (int j = 0; j < 10; j++)
+			{
+				char ch[30];
+				char c;
+				fin.read((char*)&ch, 30);
+				fin.read((char*)&c, sizeof(char));
+				sub[j].Set_All(ch, c);
+			}
+			stud.session[i].Set_Session(sub);
+		}
+
+		int day, month, year;
+		fin.read((char*)&day, sizeof(int));
+		fin.read((char*)&month, sizeof(int));
+		fin.read((char*)&year, sizeof(int));
+		stud.Data.Set_Data(day, month, year);
+		l.push_back(stud);
+	}
+}
+
 inline Student* Student::Get_info()
 {
 	Student stud;
@@ -566,7 +606,7 @@ inline void Student::Get_Ses(Session ses[])
 {
 	for (int i = 0; i < 9; i++)
 	{
-		session[i].Set_Session(ses[i]);
+		ses[i].Set_Session(session[i]);
 	}
 }
 
