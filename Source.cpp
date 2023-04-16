@@ -390,12 +390,21 @@ void NewStud(List<Student>& l)
 
 void IndividualTask(List<Student>& l)
 {
-	/*std::string *names = new std::string[l.Get_Size() - 1];
-	  
-	  тут нужно перенести все ФИО в names 
+	std::string *names = new std::string[l.Get_Size() - 1];
+	std::string a, b, c;
 
-	std::swap(l[0], l[1]);
-	std::sort(names,names+ l.Get_Size() - 1);*/
+	for (int i = 0; i < l.Get_Size() - 1; i++)
+	{
+		a = std::string(l[i].Get_FN());
+		b = std::string(l[i].Get_SN());
+		c = std::string(l[i].Get_TN());
+		names[i] = a + b + c;
+		std::cout << names[i] << std::endl;
+	}
+
+	std::sort(names, names + l.Get_Size() - 1); 
+
+
 }
 
 int main()
