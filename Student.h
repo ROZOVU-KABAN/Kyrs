@@ -49,7 +49,7 @@ public:
 private:
 	char department[20] = {};
 	char faculty[40] = {};
-	char group[10] = {};
+	char group[20] = {};
 	char number[20] = {};
 	char first_name[30] = {};
 	char second_name[30] = {};
@@ -72,7 +72,7 @@ inline void Student::Set_info(char dep[], char fac[], char gr[], char num[], cha
 {
 	strncpy_s(department, dep, 20);
 	strncpy_s(faculty, fac, 40);
-	strncpy_s(group, gr, 10);
+	strncpy_s(group, gr, 20);
 	strncpy_s(number, num, 20);
 	strncpy_s(first_name, fn, 30);
 	strncpy_s(second_name, sn, 30);
@@ -94,7 +94,7 @@ inline void Student::Set_info(Student* stud)
 	strncpy_s(first_name,stud->first_name,30);
 	strncpy_s(second_name, stud->second_name, 30);
 	strncpy_s(thired_name,stud->thired_name,30);
-	strncpy_s(group, stud->group, 10);
+	strncpy_s(group, stud->group, 20);
 	strncpy_s(number, stud->number, 20);
 	strncpy_s(flor,stud->flor,10);
 	enter_year = enter_year;
@@ -117,7 +117,7 @@ inline void Student::Set_Fac(char fac[])
 
 inline void Student::Set_Gr(char gr[])
 {
-	strncpy_s(group, gr, 10);
+	strncpy_s(group, gr,20);
 }
 
 inline void Student::Set_Num(char num[])
@@ -170,7 +170,7 @@ inline void Student::WriteInfoIntoFile(const char FileName[])
 
 	fout.write((char*)&department, 20);
 	fout.write((char*)&faculty, 40);
-	fout.write((char*)&group, 10);
+	fout.write((char*)&group, 20);
 	fout.write((char*)&number, 20);
 	fout.write((char*)&first_name, 30);
 	fout.write((char*)&second_name, 30);
@@ -214,7 +214,7 @@ inline void Student::ReadInfoFormFile(char number[], const char FielName[])
 		{
 			fin.read((char*)&department, 20);
 			fin.read((char*)&faculty, 40);
-			fin.read((char*)&group, 10);
+			fin.read((char*)&group, 20);
 			fin.read((char*)&(this->number), 20);
 			fin.read((char*)&first_name, 30);
 			fin.read((char*)&second_name, 30);
@@ -260,7 +260,7 @@ inline void Student::ReadInfoFormFile(char fn[], char sn[], const char FielName[
 		{
 			fin.read((char*)&department, 20);
 			fin.read((char*)&faculty, 40);
-			fin.read((char*)&group, 10);
+			fin.read((char*)&group, 20);
 			fin.read((char*)&number, 20);
 			fin.read((char*)&first_name, 30);
 			fin.read((char*)&second_name, 30);
@@ -308,7 +308,7 @@ inline void Student::ChangeInfoName(const char FielName[])
 		{
 			fin.read((char*)&stud.department, 20);
 			fin.read((char*)&stud.faculty, 40);
-			fin.read((char*)&stud.group, 10);
+			fin.read((char*)&stud.group, 20);
 			fin.read((char*)&stud.number, 20);
 			fin.read((char*)&stud.first_name, 30);
 			fin.read((char*)&stud.second_name, 30);
@@ -337,11 +337,11 @@ inline void Student::ChangeInfoName(const char FielName[])
 			stud.Data.Set_Data(day, month, year);
 		} while (strcmp(stud.first_name, first_name) || strcmp(stud.second_name, second_name));
 
-		fin.seekp(-2996, std::ios_base::cur);
+		fin.seekp(-3006, std::ios_base::cur);
 				
 		fin.write((char*)&department, 20);
 		fin.write((char*)&faculty, 40);
-		fin.write((char*)&group, 10);
+		fin.write((char*)&group, 20);
 		fin.write((char*)&number, 20);
 		fin.write((char*)&first_name, 30);
 		fin.write((char*)&second_name, 30);
@@ -388,7 +388,7 @@ inline void Student::ChangeInfoNum(const char FielName[])
 		{
 			fin.read((char*)&stud.department, 20);
 			fin.read((char*)&stud.faculty, 40);
-			fin.read((char*)&stud.group, 10);
+			fin.read((char*)&stud.group, 20);
 			fin.read((char*)&stud.number, 20);
 			fin.read((char*)&stud.first_name, 30);
 			fin.read((char*)&stud.second_name, 30);
@@ -416,12 +416,12 @@ inline void Student::ChangeInfoNum(const char FielName[])
 			stud.Data.Set_Data(day, month, year);
 
 		} while (strcmp(stud.number, number));
-
-		fin.seekp(-2996, std::ios_base::cur);
-
+		std::cout << fin.tellp() << " " << fin.tellg() << std::endl;
+		fin.seekp(-3006, std::ios_base::cur);
+		std::cout << fin.tellp() << " " << fin.tellg() << std::endl;
 		fin.write((char*)&department, 20);
 		fin.write((char*)&faculty, 40);
-		fin.write((char*)&group, 10);
+		fin.write((char*)&group, 20);
 		fin.write((char*)&number, 20);
 		fin.write((char*)&first_name, 30);
 		fin.write((char*)&second_name, 30);
@@ -447,6 +447,8 @@ inline void Student::ChangeInfoNum(const char FielName[])
 		fin.write((char*)&day, sizeof(int));
 		fin.write((char*)&month, sizeof(int));
 		fin.write((char*)&year, sizeof(int));
+		int a;
+		std::cin >> a;
 	}
 	fin.close();
 }
@@ -477,7 +479,7 @@ inline void Student::DeleteStudent(const char FielName[])
 			{
 				fin.read((char*)&stud.department, 20);
 				fin.read((char*)&stud.faculty, 40);
-				fin.read((char*)&stud.group, 10);
+				fin.read((char*)&stud.group, 20);
 				fin.read((char*)&stud.number, 20);
 				fin.read((char*)&stud.first_name, 30);
 				fin.read((char*)&stud.second_name, 30);
@@ -507,7 +509,7 @@ inline void Student::DeleteStudent(const char FielName[])
 				{
 					fout.write((char*)&department, 20);
 					fout.write((char*)&faculty, 40);
-					fout.write((char*)&group, 10);
+					fout.write((char*)&group, 20);
 					fout.write((char*)&number, 20);
 					fout.write((char*)&first_name, 30);
 					fout.write((char*)&second_name, 30);
@@ -545,40 +547,49 @@ inline void Student::DeleteStudent(const char FielName[])
 
 inline void Student::ReadAllStud(List<Student>& l, const char FielName[])
 {
-	Student stud;
 	std::ifstream fin;
 	fin.open(FielName, std::ios_base::binary);
-	while (!fin.eof())
+	if (fin.is_open())
 	{
-		fin.read((char*)&stud.department, 20);
-		fin.read((char*)&stud.faculty, 40);
-		fin.read((char*)&stud.group, 10);
-		fin.read((char*)&stud.number, 20);
-		fin.read((char*)&stud.first_name, 30);
-		fin.read((char*)&stud.second_name, 30);
-		fin.read((char*)&stud.thired_name, 30);
-		fin.read((char*)&stud.enter_year, sizeof(unsigned int));
-		fin.read((char*)&stud.flor, 10);
-		for (int i = 0; i < 9; i++)
+		while (!fin.eof())
 		{
-			Subject sub[10];
-			for (int j = 0; j < 10; j++)
+			Student* stud = new Student;
+			fin.read((char*)&stud->department, 20);
+			fin.read((char*)&stud->faculty, 40);
+			fin.read((char*)&stud->group, 20);
+			fin.read((char*)&stud->number, 20);
+			fin.read((char*)&stud->first_name, 30);
+			fin.read((char*)&stud->second_name, 30);
+			fin.read((char*)&stud->thired_name, 30);
+			fin.read((char*)&stud->enter_year, sizeof(unsigned int));
+			fin.read((char*)&stud->flor, 10);
+			for (int i = 0; i < 9; i++)
 			{
-				char ch[30];
-				char c;
-				fin.read((char*)&ch, 30);
-				fin.read((char*)&c, sizeof(char));
-				sub[j].Set_All(ch, c);
+				Subject sub[10];
+				for (int j = 0; j < 10; j++)
+				{
+					char ch[30];
+					char c;
+					fin.read((char*)&ch, 30);
+					fin.read((char*)&c, sizeof(char));
+					sub[j].Set_All(ch, c);
+				}
+				stud->session[i].Set_Session(sub);
 			}
-			stud.session[i].Set_Session(sub);
-		}
 
-		int day, month, year;
-		fin.read((char*)&day, sizeof(int));
-		fin.read((char*)&month, sizeof(int));
-		fin.read((char*)&year, sizeof(int));
-		stud.Data.Set_Data(day, month, year);
-		l.push_back(stud);
+			int day, month, year;
+			fin.read((char*)&day, sizeof(int));
+			fin.read((char*)&month, sizeof(int));
+			fin.read((char*)&year, sizeof(int));
+			stud->Data.Set_Data(day, month, year);
+			l.push_back(*stud);
+			delete stud;
+		}
+		fin.close();
+	}
+	else
+	{
+		std::cout << "error open file" << std::endl;
 	}
 }
 
@@ -591,7 +602,7 @@ inline Student* Student::Get_info()
 	strncpy_s(stud.first_name, first_name, 30);
 	strncpy_s(stud.second_name, second_name, 30);
 	strncpy_s(stud.thired_name, thired_name, 30);
-	strncpy_s(stud.group, group, 10);
+	strncpy_s(stud.group, group, 20);
 	strncpy_s(stud.number, number, 20);
 	strncpy_s(stud.flor, flor, 10);
 	

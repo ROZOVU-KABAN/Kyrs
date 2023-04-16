@@ -22,8 +22,8 @@ public:
 
 
 private:
-	unsigned short day;
-	unsigned short month;
+	unsigned int day;
+	unsigned int month;
 	unsigned int year;
 };
 

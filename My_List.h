@@ -16,8 +16,8 @@ public:
 	void insert(T value, int index);
 	void push_front(T data);
 
-	/*void remuveAT(int index);
-	void pop_back();*/
+	/*void remuveAT(int index);*/
+	void pop_back();
 
 	T& operator[](const int index);
 
@@ -62,6 +62,7 @@ void List<T>::clear()
 	{
 		pop_front();
 	}
+	header = nullptr;
 }
 
 template<typename T>
@@ -119,9 +120,9 @@ void List<T>::push_back(T data)
 	if (header == nullptr)
 	{
 		header = new Node<T>(data);
-		header->pNext = header->prev = header;
-	}
-	else
+		header->pNext = header;
+		header->prev = header;
+	}else
 	{
 		Node<T>* current = this->header;
 
@@ -143,6 +144,16 @@ template<typename T>
 int List<T>::Get_Size()
 {
 	return Size;
+}
+
+template<typename T>
+inline void List<T>::pop_back()
+{
+	Node<T>* temp = header->prev;
+	temp->prev->pNext = header;
+	header->prev = temp->prev;
+	delete temp;
+	Size--;
 }
 
 template<typename T>

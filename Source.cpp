@@ -2,6 +2,7 @@
 #include "Libruaries.h"
 #include <fstream>
 #include <windows.h>
+#include <algorithm>
 //48-57
 const char FielName[] = "File.txt";
 
@@ -28,11 +29,11 @@ void Set_Session(Student& stud)
 	std::cin >> nSes; std::cout << std::endl;
 	for (int i = 0; i < nSes; i++)
 	{
-		std::cout << "Введите количество предметов в  "<< i <<"-ой сесиии: ";
+		std::cout << "Введите количество предметов в  "<< i+1 <<"-ой сесиии: ";
 		std::cin >> nSub; std::cout << std::endl;
 		for (int j = 0; j < nSub; j++)
 		{
-			std::cout << "Введите название предмета: "; std::cin >> name; std::cout << std::endl;
+			std::cout << "Введите название предмета: "; std::cin.get(name, 30); std::cout << std::endl;
 			std::cout << "Введите оценку: "; std::cin >> ch; std::cout << std::endl;
 			sub[j].Set_All(name, ch);
 		}
@@ -40,6 +41,7 @@ void Set_Session(Student& stud)
 		system("cls");
 	}
 	stud.Set_Ses(ses);
+	char ch1;
 }
 
 void ChangeInfo(Student& stud)
@@ -81,7 +83,6 @@ void ChangeInfo(Student& stud)
 	case 2:
 	{
 		std::cout << "Введите пол" << std::endl;
-		std::cin >> ch;
 		
 		std::cin >> ch;
 		if (ChekChar(ch))
@@ -219,6 +220,8 @@ void print_functionMain()
 	std::cout << "4 - Удалить информацию о студенте" << std::endl;
 	std::cout << "5 - Посмотреть информацию о сесии студента" << std::endl;
 	std::cout << "6 - Добавить студента" << std::endl;
+	std::cout << "7 - Индивидуальное задание" << std::endl;
+	std::cout << "8 - Прочитать все данные из файла" << std::endl;
 	std::cout << "0 - Завершить прграмму" << std::endl;
 }
 
@@ -237,7 +240,7 @@ void DrawAllStud(List<Student>& l)
 	std::cout << "|"; std::cout.width(18); std::cout << "Год рождения";
 	std::cout << "|" << std::endl;
 
-	for (int i = 0; i < l.Get_Size(); i++)
+	for (int i = 0; i < l.Get_Size()-1; i++)
 	{
 		Burn data;
 		l[i].Get_Data(data);
@@ -331,6 +334,7 @@ void print_session(Student& stud)
 
 void NewStud(List<Student>& l)
 {
+	system("cls");
 	Student stud;
 	char ch[40];
 	int num, day, month, year;
@@ -358,15 +362,19 @@ void NewStud(List<Student>& l)
 	std::cout << "Введите группу" << std::endl;
 	std::cin >> ch;
 	stud.Set_Gr(ch);
+	std::cout << "Введите факультет" << std::endl;
+	std::cin.get(ch, 40);
+	stud.Set_Fac(ch);
 	std::cout << "Введите отдел" << std::endl;
-	std::cin >> ch;
+	std::cin.get(ch, 40);
 	stud.Set_Dep(ch);
 	std::cout << "Введите пол" << std::endl;
 	std::cin >> ch;
 	stud.Set_Flor(ch);
-	std::cout << "Введите год поступления" << std::endl;
+	std::cout << "Введите год поступления (только год)" << std::endl;
 	std::cin >> num;
 	stud.Set_EnterYear(num);
+	std::cout << "Введите дату рождения: " << std::endl;
 	std::cout << "Введите день" << std::endl;
 	std::cin >> day;
 	std::cout << "Введите месяц" << std::endl;
@@ -376,36 +384,46 @@ void NewStud(List<Student>& l)
 	Burn data(day, month, year);
 	stud.Set_Data(data);
 	Set_Session(stud);
-	l.push_back(stud);
+	//l.push_back(stud);
 	stud.WriteInfoIntoFile(FielName);
+}
+
+void IndividualTask(List<Student>& l)
+{
+	/*std::string *names = new std::string[l.Get_Size() - 1];
+	  
+	  тут нужно перенести все ФИО в names 
+
+	std::swap(l[0], l[1]);
+	std::sort(names,names+ l.Get_Size() - 1);*/
 }
 
 int main()
 {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "ru");
 	List<Student> l;
 	Student stud;
-	stud.ReadAllStud(l, FielName);
+	//stud.ReadAllStud(l, FielName);
 	Burn data;
 	Subject sub[10];
 	Session ses[9];
 	int flag = 1;
-
-	stud.ReadAllStud(l, FielName);
-
 	while (flag)
 	{
 		do
 		{
 			print_functionMain();
 			std::cin >> flag;
-		} while (flag>6 || flag <0);
+		} while (flag>8 || flag <0);
 		
 		switch (flag)
 		{
 		case 1:
 		{
 			DrawAllStud(l);
+			break;
 		}
 		case 2:
 		{
@@ -424,8 +442,10 @@ int main()
 		}
 		case 3:
 		{
+			system("cls");
 			std::cout << "Введите номер зачетки студента: ";
 			char numb[20] = {};
+			std::cin >> numb;
 			for (int i = 0; i < l.Get_Size(); i++)
 			{
 				if (!strcmp(numb, l[i].Get_Num()))
@@ -465,6 +485,20 @@ int main()
 		{
 			NewStud(l);
 		}
+		case 7:
+		{
+			IndividualTask(l);
+			break;
+		}
+		case 8:
+		{
+			l.clear();
+			stud.ReadAllStud(l, FielName);
+			std::cout << l.Get_Size() << std::endl;
+			break;
+		}
+		case 0:
+			break;
 		default:
 		{
 			std::cout << "error number" <<std::endl;
@@ -472,6 +506,7 @@ int main()
 		}
 
 		}
+
 		if (!flag) break;
 	}
 	
