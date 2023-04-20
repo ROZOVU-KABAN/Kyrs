@@ -31,6 +31,8 @@ public:
 	void DeleteStudent(const char FielName[]);
 	void ReadAllStud(List<Student>& l,const char FielName[]);
 
+	double Get_Sr_Ball();
+
 	Student* Get_info();
 	char* Get_Dep() { return department; }
 	char* Get_Fac() { return faculty; }
@@ -157,7 +159,7 @@ inline void Student::Set_Data(Burn& data)
 
 inline void Student::Set_Ses(Session ses[])
 {
-		for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		session[i].Set_Session(ses[i]);
 	}
@@ -591,6 +593,26 @@ inline void Student::ReadAllStud(List<Student>& l, const char FielName[])
 	{
 		std::cout << "error open file" << std::endl;
 	}
+}
+
+inline double Student::Get_Sr_Ball()
+{
+	//sr = mark- '0'
+	double sr=0;
+	int n = 0;
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (session[i].Get_Sub(j).Get_Mark() != '-')
+			{
+				n++;
+				sr += (session[i].Get_Sub(j).Get_Mark() - '0');
+			}
+		}
+	}
+	sr = sr / n;
+	return sr;
 }
 
 inline Student* Student::Get_info()

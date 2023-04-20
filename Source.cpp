@@ -2,12 +2,104 @@
 #include "Libruaries.h"
 #include <fstream>
 #include <windows.h>
-#include <algorithm>
+#include <string>
+
 //48-57
-const char FielName[] = "File.txt";
+const char FielName[] = "file.txt";
+
+
+bool CheckNum(char ch[])
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (int(ch[i]) == 0) break;
+		if (int(ch[i]) < 48 || int(ch[i]) > 57) return false;
+	}
+	return true;
+}
+
+int CharToInt(char ch[])
+{
+	if (CheckNum(ch))
+	{
+		int num = ch[0] - '0';
+
+		for (int i = 1; i < 10; i++)
+		{
+			if (int(ch[i]) == 0) break;
+
+			num *= 10;
+			num += ch[i] - '0';
+		}
+
+		return num;
+	}
+	else
+	{
+		std::cout << "Error type of data" << std::endl;
+		return 0;
+	}
+}
+
+void Crypt()
+{
+	srand(time(NULL));
+	char* pass = new char[64];
+	for (int i = 0; i < 64; ++i) {
+		switch (rand() % 3) {
+		case 0:
+			pass[i] = rand() % 10 + '0';
+			break;
+		case 1:
+			pass[i] = rand() % 26 + 'A';
+			break;
+		case 2:
+			pass[i] = rand() % 26 + 'a';
+		}
+	}
+	std::string command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -salt -in file.txt -out file.txt.enc -pass pass:";
+	command += pass;
+	system(command.c_str());
+	if (remove("file.txt") != 0) {
+		std::cout << "[ERROR] - deleting file" <<std::endl;
+	}
+	std::ofstream file;
+	file.open("key.txt", std::ios_base::binary);
+	file.write(pass, 65);
+	file.close();
+	command = "openssl\\bin\\openssl.exe rsautl -encrypt -inkey rsa.public -pubin -in key.txt -out key.txt.enc";
+	system(command.c_str());
+	if (remove("key.txt") != 0) {
+		std::cout << "[ERROR] - deleting file" <<std::endl;
+	}
+}
+
+void Decrypt()
+{
+	std::string command = "openssl\\bin\\openssl.exe rsautl -decrypt -inkey rsa.private -in key.txt.enc -out key.txt";
+		system(command.c_str());
+	if (remove("key.txt.enc") != 0) {
+		std::cout << "[ERROR] - deleting file" << std::endl;
+	}
+	char* pass = new char[64];
+	std::ifstream file;
+	file.open("key.txt", std::ios_base::binary);
+	file.read(pass, 65);
+	file.close();
+	if (remove("key.txt") != 0) {
+		std::cout << "[ERROR] - deleting file" <<std::endl;
+	}
+	command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -d -in file.txt.enc -out file.txt -pass pass:";
+		command += pass;
+	system(command.c_str());
+	if (remove("file.txt.enc") != 0) {
+		std::cout << "[ERROR] - deleting file" << std::endl;
+	}
+}
 
 bool ChekChar(char ch[])
 {
+	if (int(ch[0]) < -64 || int(ch[0]) > -33) return false;
 	for (int i = 0; i < 40; i++)
 	{
 		if (int(ch[i]) > 47 && int(ch[i]) < 58)
@@ -23,25 +115,34 @@ void Set_Session(Student& stud)
 	Subject sub[10];
 	int nSes;
 	int nSub;
-	char name[30];
-	char ch;
-	std::cout << "¬ведите количество сессий: ";
-	std::cin >> nSes; std::cout << std::endl;
+	char ch[40];
+	do
+	{
+		std::cout << "¬ведите количество сессий: ";
+		std::cin >> ch; std::cout << std::endl;
+		nSes = CharToInt(ch);
+	} while (!CharToInt(ch));
 	for (int i = 0; i < nSes; i++)
 	{
-		std::cout << "¬ведите количество предметов в  "<< i+1 <<"-ой сесиии: ";
-		std::cin >> nSub; std::cout << std::endl;
+		do
+		{
+			std::cout << "¬ведите количество предметов в  " << i + 1 << "-ой сесиии: ";
+			std::cin >> ch; std::cout << std::endl;
+			nSub = CharToInt(ch);
+		} while (!CharToInt(ch));
 		for (int j = 0; j < nSub; j++)
 		{
-			std::cout << "¬ведите название предмета: "; std::cin.get(name, 30); std::cout << std::endl;
+			char ch;
+			char *name = new char[30];
+			std::cout << "¬ведите название предмета: "; std::cin.getline(name, 30);  std::cin.getline(name, 30); std::cout << std::endl;
 			std::cout << "¬ведите оценку: "; std::cin >> ch; std::cout << std::endl;
 			sub[j].Set_All(name, ch);
+			delete name;
 		}
 		ses[i].Set_Session(sub);
 		system("cls");
 	}
 	stud.Set_Ses(ses);
-	char ch1;
 }
 
 void ChangeInfo(Student& stud)
@@ -130,12 +231,24 @@ void ChangeInfo(Student& stud)
 	}
 	case 6:
 	{
-		std::cout << "¬ведите день" << std::endl;
-		std::cin >> day;
-		std::cout << "¬ведите мес€ц" << std::endl;
-		std::cin >> month;
-		std::cout << "¬ведите год" << std::endl;
-		std::cin >> year;
+		do
+		{
+			std::cout << "¬ведите день" << std::endl;
+			std::cin >> ch;
+			day = CharToInt(ch);
+		} while (!CharToInt(ch));
+		do
+		{
+			std::cout << "¬ведите мес€ц" << std::endl;
+			std::cin >> ch;
+			month = CharToInt(ch);
+		} while (!CharToInt(ch));
+		do
+		{
+			std::cout << "¬ведите год" << std::endl;
+			std::cin >> ch;
+			year = CharToInt(ch);
+		} while (!CharToInt(ch));
 		Burn data(day, month, year);
 		stud.Set_Data(data);
 		stud.ChangeInfoName(FielName);
@@ -143,8 +256,12 @@ void ChangeInfo(Student& stud)
 	}
 	case 7:
 	{
-		std::cout << "¬ведите год поступлени€" << std::endl;
-		std::cin >> num;
+		do 
+		{
+			std::cout << "¬ведите год поступлени€" << std::endl;
+			std::cin >> ch;
+			num = CharToInt(ch);
+		} while (!CharToInt(ch));
 		stud.Set_EnterYear(num);
 		stud.ChangeInfoName(FielName);
 		break;
@@ -338,24 +455,29 @@ void NewStud(List<Student>& l)
 	Student stud;
 	char ch[40];
 	int num, day, month, year;
-	std::cout << "¬ведите фамилию" << std::endl;
-	std::cin >> ch;
-	if (ChekChar(ch))
+	do
 	{
-		stud.Set_FN(ch);
-	}
-	std::cout << "¬ведите им€" << std::endl;
-	std::cin >> ch;
-	if (ChekChar(ch))
+		memset(ch, 0, sizeof(ch));
+		std::cout << "¬ведите фамилию" << std::endl;
+		std::cin >> ch;
+	} while (!ChekChar(ch));
+	stud.Set_FN(ch);
+	do
 	{
-		stud.Set_Sn(ch);
-	}
-	std::cout << "¬ведите отчество" << std::endl;
-	std::cin >> ch;
-	if (ChekChar(ch))
+		memset(ch, 0, sizeof(ch));
+		std::cout << "¬ведите им€" << std::endl;
+		std::cin >> ch;
+	} while (!ChekChar(ch));
+	stud.Set_Sn(ch);
+
+	do
 	{
-		stud.Set_TN(ch);
-	}
+		memset(ch, 0, sizeof(ch));
+		std::cout << "¬ведите отчество" << std::endl;
+		std::cin >> ch;
+	} while (!ChekChar(ch));
+	stud.Set_TN(ch);
+
 	std::cout << "¬ведите номер зачетки" << std::endl;
 	std::cin >> ch;
 	stud.Set_Num(ch);
@@ -363,70 +485,121 @@ void NewStud(List<Student>& l)
 	std::cin >> ch;
 	stud.Set_Gr(ch);
 	std::cout << "¬ведите факультет" << std::endl;
-	std::cin.get(ch, 40);
+	std::cin.getline(ch, 40);
+	std::cin.getline(ch, 40);
 	stud.Set_Fac(ch);
 	std::cout << "¬ведите отдел" << std::endl;
-	std::cin.get(ch, 40);
+	std::cin.getline(ch, 40);
 	stud.Set_Dep(ch);
 	std::cout << "¬ведите пол" << std::endl;
 	std::cin >> ch;
 	stud.Set_Flor(ch);
-	std::cout << "¬ведите год поступлени€ (только год)" << std::endl;
-	std::cin >> num;
+
+	do
+	{
+		std::cout << "¬ведите год поступлени€ (только год)" << std::endl;
+		std::cin >> ch;
+		num = CharToInt(ch);
+	} while (!CharToInt(ch));
 	stud.Set_EnterYear(num);
 	std::cout << "¬ведите дату рождени€: " << std::endl;
-	std::cout << "¬ведите день" << std::endl;
-	std::cin >> day;
-	std::cout << "¬ведите мес€ц" << std::endl;
-	std::cin >> month;
-	std::cout << "¬ведите год" << std::endl;
-	std::cin >> year;
+
+	do
+	{
+		std::cout << "¬ведите день" << std::endl;
+		std::cin >> ch;
+		day = CharToInt(ch);
+	} while (!CharToInt(ch));
+	do
+	{
+
+		std::cout << "¬ведите мес€ц" << std::endl;
+		std::cin >> ch;
+		month = CharToInt(ch);
+	} while (!CharToInt(ch));
+	do
+	{
+		std::cout << "¬ведите год" << std::endl;
+		std::cin >> ch;
+		year = CharToInt(ch);
+	} while (!CharToInt(ch));
+
+
+
 	Burn data(day, month, year);
 	stud.Set_Data(data);
 	Set_Session(stud);
-	//l.push_back(stud);
+	l.push_back(stud);
 	stud.WriteInfoIntoFile(FielName);
 }
 
 void IndividualTask(List<Student>& l)
 {
-	std::string *names = new std::string[l.Get_Size() - 1];
-	std::string a, b, c;
-
-	for (int i = 0; i < l.Get_Size() - 1; i++)
+	for (int i = 1; i < l.Get_Size() - 1; i++)
 	{
-		a = std::string(l[i].Get_FN());
-		b = std::string(l[i].Get_SN());
-		c = std::string(l[i].Get_TN());
-		names[i] = a + b + c;
-		std::cout << names[i] << std::endl;
+		for (int j = i; j < l.Get_Size() - 1; j++)
+		{
+			if (strcmp(l[j-1].Get_FN(), l[j].Get_FN())>0)
+			{
+				std::swap(l[j], l[j-1]);
+			}
+		}
 	}
 
-	std::sort(names, names + l.Get_Size() - 1); 
+	//ј - -64  я - -33
+	//– - -48
+	int k=0;
+	for (int i = 1; i < l.Get_Size() - 1; i++)
+	{
+		if (l[i].Get_FN()[0] >= -48 )
+		{
+			k = i;
+			break;
+		}
 
+		for (int j = 1; j < l.Get_Size() - 1; j++)
+		{
+			if (l[j].Get_FN()[0] >= -48)
+			{
+				break;
+			}
+
+			if (l[j-1].Get_Sr_Ball()>l[j].Get_Sr_Ball())
+			{
+				std::swap(l[j], l[j - 1]);
+			}
+		}
+	}
+
+
+	for (int i=k; i < l.Get_Size() - 1; i++)
+	{
+		for (int j = k+1; j < l.Get_Size() - 1; j++)
+		{
+			if (l[j - 1].Get_Sr_Ball() > l[j].Get_Sr_Ball())
+			{
+				std::swap(l[j], l[j - 1]);
+			}
+		}
+	}
 
 }
 
-int main()
+void menu()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	setlocale(LC_ALL, "ru");
 	List<Student> l;
 	Student stud;
-	//stud.ReadAllStud(l, FielName);
-	Burn data;
-	Subject sub[10];
-	Session ses[9];
 	int flag = 1;
 	while (flag)
 	{
 		do
 		{
+			char ch[40];
 			print_functionMain();
-			std::cin >> flag;
-		} while (flag>8 || flag <0);
-		
+			std::cin >> ch;
+			flag = CharToInt(ch);
+		} while (flag > 8 || flag < 0);
+
 		switch (flag)
 		{
 		case 1:
@@ -473,6 +646,7 @@ int main()
 			{
 				if (!strcmp(numb, l[i].Get_Num())) l[i].DeleteStudent(FielName);
 			}
+			break;
 		}
 		case 5:
 		{
@@ -510,7 +684,7 @@ int main()
 			break;
 		default:
 		{
-			std::cout << "error number" <<std::endl;
+			std::cout << "error number" << std::endl;
 			break;
 		}
 
@@ -518,6 +692,20 @@ int main()
 
 		if (!flag) break;
 	}
+
+
+
+}
+int main()
+{
+	Decrypt();
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "ru");
 	
+	menu();
+
+
+	Crypt();
 	return 0;
 }
