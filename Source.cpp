@@ -7,6 +7,50 @@
 //48-57
 const char FielName[] = "file.txt";
 
+bool CheckNum(char ch[]);
+
+int CharToInt(char ch[]);
+
+void Crypt();
+
+void Decrypt();
+
+bool ChekChar(char ch[]);
+
+void Set_Session(Student& stud);
+
+void ChangeInfo(Student& stud);
+
+void print_functionMain();
+
+void DrawAllStud(List<Student>& l);
+
+void DrawOneStud(Student& stud);
+
+void print_session(Student& stud);
+
+void NewStud(List<Student>& l);
+
+void IndividualTask(List<Student>& l);
+
+void menu();
+
+int main()
+{
+
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "ru");
+
+	Decrypt();
+
+	menu();
+
+	Crypt();
+
+	return 0;
+}
+
 bool CheckNum(char ch[])
 {
 	for (int i = 0; i < 10; i++)
@@ -60,7 +104,7 @@ void Crypt()
 	command += pass;
 	system(command.c_str());
 	if (remove("file.txt") != 0) {
-		std::cout << "[ERROR] - deleting file" <<std::endl;
+		std::cout << "[ERROR] - deleting file" << std::endl;
 	}
 	std::ofstream file;
 	file.open("key.txt", std::ios_base::binary);
@@ -69,14 +113,14 @@ void Crypt()
 	command = "openssl\\bin\\openssl.exe rsautl -encrypt -inkey rsa.public -pubin -in key.txt -out key.txt.enc";
 	system(command.c_str());
 	if (remove("key.txt") != 0) {
-		std::cout << "[ERROR] - deleting file" <<std::endl;
+		std::cout << "[ERROR] - deleting file" << std::endl;
 	}
 }
 
 void Decrypt()
 {
 	std::string command = "openssl\\bin\\openssl.exe rsautl -decrypt -inkey rsa.private -in key.txt.enc -out key.txt";
-		system(command.c_str());
+	system(command.c_str());
 	if (remove("key.txt.enc") != 0) {
 		std::cout << "[ERROR] - deleting file" << std::endl;
 	}
@@ -86,10 +130,10 @@ void Decrypt()
 	file.read(pass, 65);
 	file.close();
 	if (remove("key.txt") != 0) {
-		std::cout << "[ERROR] - deleting file" <<std::endl;
+		std::cout << "[ERROR] - deleting file" << std::endl;
 	}
 	command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -d -in file.txt.enc -out file.txt -pass pass:";
-		command += pass;
+	command += pass;
 	system(command.c_str());
 	if (remove("file.txt.enc") != 0) {
 		std::cout << "[ERROR] - deleting file" << std::endl;
@@ -112,38 +156,42 @@ void Set_Session(Student& stud)
 	system("cls");
 	int nSes;
 	int nSub;
-	Session* ses = new Session[nSes];
 	char ch[40];
+
 	do
 	{
 		std::cout << "Введите количество сессий: ";
 		std::cin >> ch; std::cout << std::endl;
 		nSes = CharToInt(ch);
 	} while (!CharToInt(ch));
+
+	Session ses[9];
+	
 	for (int i = 0; i < nSes; i++)
 	{
-		Subject* sub = new Subject[nSub];
 		do
 		{
 			std::cout << "Введите количество предметов в  " << i + 1 << "-ой сесиии: ";
 			std::cin >> ch; std::cout << std::endl;
 			nSub = CharToInt(ch);
 		} while (!CharToInt(ch));
+
+		Subject sub[10];
+
 		for (int j = 0; j < nSub; j++)
 		{
 			char ch;
-			char *name = new char[30];
+			char* name = new char[30];
 			std::cout << "Введите название предмета: "; std::cin.getline(name, 30);  std::cin.getline(name, 30); std::cout << std::endl;
 			std::cout << "Введите оценку: "; std::cin >> ch; std::cout << std::endl;
 			sub[j].Set_All(name, ch);
 			delete name;
 		}
 		ses[i].Set_Session(sub);
-		delete sub;
+
 		system("cls");
 	}
 	stud.Set_Ses(ses);
-	delete ses;
 }
 
 void ChangeInfo(Student& stud)
@@ -185,7 +233,7 @@ void ChangeInfo(Student& stud)
 	case 2:
 	{
 		std::cout << "Введите пол" << std::endl;
-		
+
 		std::cin >> ch;
 		if (ChekChar(ch))
 		{
@@ -257,7 +305,7 @@ void ChangeInfo(Student& stud)
 	}
 	case 7:
 	{
-		do 
+		do
 		{
 			std::cout << "Введите год поступления" << std::endl;
 			std::cin >> ch;
@@ -347,7 +395,7 @@ void DrawAllStud(List<Student>& l)
 {
 
 	system("cls");
-	
+
 	std::cout << "|"; std::cout.width(60); std::cout << "Фамалия Имя Отчество";
 	std::cout << "|"; std::cout.width(15); std::cout << "Пол";
 	std::cout << "|"; std::cout.width(25); std::cout << "Номер зачетки";
@@ -358,29 +406,29 @@ void DrawAllStud(List<Student>& l)
 	std::cout << "|"; std::cout.width(18); std::cout << "Год рождения";
 	std::cout << "|" << std::endl;
 
-	for (int i = 0; i < l.Get_Size()-1; i++)
+	for (int i = 0; i < l.Get_Size() - 1; i++)
 	{
 		Burn data;
 		l[i].Get_Data(data);
 		std::cout << "|"; std::cout.width(20); std::cout << l[i].Get_FN();
 		std::cout.width(20); std::cout << l[i].Get_SN();
-		std::cout.width(20); std::cout<< l[i].Get_TN();
+		std::cout.width(20); std::cout << l[i].Get_TN();
 		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_Flor();
 		std::cout << "|"; std::cout.width(25); std::cout << l[i].Get_Num();
 		std::cout << "|"; std::cout.width(25); std::cout << l[i].Get_Dep();
 		std::cout << "|"; std::cout.width(20); std::cout << l[i].Get_Fac();
 		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_Gr();
 		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_EnterYear();
-		std::cout << "|"; std::cout.width(10); 
+		std::cout << "|"; std::cout.width(10);
 		if (data.Get_Day() / 10 == 0) std::cout << "0";
-		std::cout << data.Get_Day()<<".";
+		std::cout << data.Get_Day() << ".";
 		if (data.Get_Month() / 10 == 0) std::cout << "0";
-		std::cout << data.Get_Month()<<".";
+		std::cout << data.Get_Month() << ".";
 		std::cout << data.Get_Year();
-		std::cout << "|"<<std::endl;
+		std::cout << "|" << std::endl;
 	}
 	char ch1;
-	std::cout<<std::endl<<std::endl << "Введите 0 чтобы вернуться назад" << std::endl;
+	std::cout << std::endl << std::endl << "Введите 0 чтобы вернуться назад" << std::endl;
 	while (true)
 	{
 		std::cin >> ch1;
@@ -435,7 +483,7 @@ void print_session(Student& stud)
 	std::cout << "|"; std::cout.width(30); std::cout << "Сессии"; std::cout << "  |" << std::endl;
 	for (int i = 0; i < 9; i++)
 	{
-		std::cout << "|"; std::cout.width(30); std::cout << "Номер сессии - "; std::cout<<i+1 <<" |" << std::endl;
+		std::cout << "|"; std::cout.width(30); std::cout << "Номер сессии - "; std::cout << i + 1 << " |" << std::endl;
 		for (int j = 0; j < 10; j++)
 		{
 			std::cout << "|"; std::cout.width(30); std::cout << ses[i].Get_Sub(j).Get_SubName() << " " << ses[i].Get_Sub(j).Get_Mark(); std::cout << "|" << std::endl;
@@ -540,19 +588,19 @@ void IndividualTask(List<Student>& l)
 	{
 		for (int j = i; j < l.Get_Size() - 1; j++)
 		{
-			if (strcmp(l[j-1].Get_FN(), l[j].Get_FN())>0)
+			if (strcmp(l[j - 1].Get_FN(), l[j].Get_FN()) > 0)
 			{
-				std::swap(l[j], l[j-1]);
+				std::swap(l[j], l[j - 1]);
 			}
 		}
 	}
 
 	//А - -64  Я - -33
 	//Р - -48
-	int k=0;
+	int k = 0;
 	for (int i = 1; i < l.Get_Size() - 1; i++)
 	{
-		if (l[i].Get_FN()[0] >= -48 )
+		if (l[i].Get_FN()[0] >= -48)
 		{
 			k = i;
 			break;
@@ -565,7 +613,7 @@ void IndividualTask(List<Student>& l)
 				break;
 			}
 
-			if (l[j-1].Get_Sr_Ball()>l[j].Get_Sr_Ball())
+			if (l[j - 1].Get_Sr_Ball() > l[j].Get_Sr_Ball())
 			{
 				std::swap(l[j], l[j - 1]);
 			}
@@ -573,9 +621,9 @@ void IndividualTask(List<Student>& l)
 	}
 
 
-	for (int i=k; i < l.Get_Size() - 1; i++)
+	for (int i = k; i < l.Get_Size() - 1; i++)
 	{
-		for (int j = k+1; j < l.Get_Size() - 1; j++)
+		for (int j = k + 1; j < l.Get_Size() - 1; j++)
 		{
 			if (l[j - 1].Get_Sr_Ball() > l[j].Get_Sr_Ball())
 			{
@@ -696,18 +744,4 @@ void menu()
 
 
 
-}
-
-int main()
-{
-	Decrypt();
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	setlocale(LC_ALL, "ru");
-	
-	menu();
-
-
-	Crypt();
-	return 0;
 }
