@@ -7,7 +7,6 @@
 //48-57
 const char FielName[] = "file.txt";
 
-
 bool CheckNum(char ch[])
 {
 	for (int i = 0; i < 10; i++)
@@ -111,10 +110,9 @@ bool ChekChar(char ch[])
 void Set_Session(Student& stud)
 {
 	system("cls");
-	Session ses[9];
-	Subject sub[10];
 	int nSes;
 	int nSub;
+	Session* ses = new Session[nSes];
 	char ch[40];
 	do
 	{
@@ -124,6 +122,7 @@ void Set_Session(Student& stud)
 	} while (!CharToInt(ch));
 	for (int i = 0; i < nSes; i++)
 	{
+		Subject* sub = new Subject[nSub];
 		do
 		{
 			std::cout << "Введите количество предметов в  " << i + 1 << "-ой сесиии: ";
@@ -140,9 +139,11 @@ void Set_Session(Student& stud)
 			delete name;
 		}
 		ses[i].Set_Session(sub);
+		delete sub;
 		system("cls");
 	}
 	stud.Set_Ses(ses);
+	delete ses;
 }
 
 void ChangeInfo(Student& stud)
@@ -696,6 +697,7 @@ void menu()
 
 
 }
+
 int main()
 {
 	Decrypt();

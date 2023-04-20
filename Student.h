@@ -418,9 +418,7 @@ inline void Student::ChangeInfoNum(const char FielName[])
 			stud.Data.Set_Data(day, month, year);
 
 		} while (strcmp(stud.number, number));
-		std::cout << fin.tellp() << " " << fin.tellg() << std::endl;
 		fin.seekp(-3006, std::ios_base::cur);
-		std::cout << fin.tellp() << " " << fin.tellg() << std::endl;
 		fin.write((char*)&department, 20);
 		fin.write((char*)&faculty, 40);
 		fin.write((char*)&group, 20);
@@ -449,8 +447,6 @@ inline void Student::ChangeInfoNum(const char FielName[])
 		fin.write((char*)&day, sizeof(int));
 		fin.write((char*)&month, sizeof(int));
 		fin.write((char*)&year, sizeof(int));
-		int a;
-		std::cin >> a;
 	}
 	fin.close();
 }
