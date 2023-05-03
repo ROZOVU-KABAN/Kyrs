@@ -166,7 +166,7 @@ void Set_Session(Student& stud)
 	} while (!CharToInt(ch));
 
 	Session ses[9];
-	
+	std::cout << "!Внимание! Если предмет оценивается зачетом, то зачет - оценка 1, не зачем - оценка 0" << std::endl;
 	for (int i = 0; i < nSes; i++)
 	{
 		do
@@ -480,13 +480,24 @@ void print_session(Student& stud)
 {
 	Session ses[9];
 	stud.Get_Ses(ses);
-	std::cout << "|"; std::cout.width(30); std::cout << "Сессии"; std::cout << "  |" << std::endl;
+	std::cout << "|"; std::cout.width(40); std::cout << "Сессии" << std::endl;
 	for (int i = 0; i < 9; i++)
 	{
-		std::cout << "|"; std::cout.width(30); std::cout << "Номер сессии - "; std::cout << i + 1 << " |" << std::endl;
+		std::cout << "|"; std::cout.width(40); std::cout << "Номер сессии -  "; std::cout << i + 1  << std::endl;
 		for (int j = 0; j < 10; j++)
 		{
-			std::cout << "|"; std::cout.width(30); std::cout << ses[i].Get_Sub(j).Get_SubName() << " " << ses[i].Get_Sub(j).Get_Mark(); std::cout << "|" << std::endl;
+			if (ses[i].Get_Sub(j).Get_Mark() == '0')
+			{
+				std::cout << "|"; std::cout.width(40); std::cout << ses[i].Get_Sub(j).Get_SubName() << " не зачет"<< std::endl;
+			}
+			else if (ses[i].Get_Sub(j).Get_Mark() == '1')
+			{
+				std::cout << "|"; std::cout.width(40); std::cout << ses[i].Get_Sub(j).Get_SubName() << " зачет" << std::endl;
+			}
+			else
+			{
+				std::cout << "|"; std::cout.width(40); std::cout << ses[i].Get_Sub(j).Get_SubName() << " " << ses[i].Get_Sub(j).Get_Mark()<< std::endl;
+			}
 		}
 	}
 	char ch1;

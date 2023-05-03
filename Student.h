@@ -602,7 +602,7 @@ inline double Student::Get_Sr_Ball()
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			if (session[i].Get_Sub(j).Get_Mark() != '-')
+			if (session[i].Get_Sub(j).Get_Mark() != '-' && session[i].Get_Sub(j).Get_Mark() != '0' && session[i].Get_Sub(j).Get_Mark() != '1')
 			{
 				n++;
 				sr += (session[i].Get_Sub(j).Get_Mark() - '0');
