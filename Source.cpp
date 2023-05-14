@@ -80,7 +80,7 @@ int CharToInt(char ch[])
 	else
 	{
 		std::cout << "Error type of data" << std::endl;
-		return 0;
+		return -1;
 	}
 }
 
@@ -219,15 +219,8 @@ void ChangeInfo(Student& stud)
 	{
 		std::cout << "Введите отделение" << std::endl;
 		std::cin >> ch;
-		if (ChekChar(ch))
-		{
-			stud.Set_Dep(ch);
-			stud.ChangeInfoNum(stud.Get_Num());
-		}
-		else
-		{
-			std::cout << "error text, no 0-9" << std::endl;
-		}
+		stud.Set_Dep(ch);
+		stud.ChangeInfoNum(FielName);
 		break;
 	}
 	case 2:
@@ -404,7 +397,7 @@ void DrawAllStud(List<Student>& l)
 	std::cout << "|"; std::cout.width(15); std::cout << "Группа";
 	std::cout << "|"; std::cout.width(5); std::cout << "Год поступления";
 	std::cout << "|"; std::cout.width(18); std::cout << "Год рождения";
-	std::cout << "|" << std::endl;
+	std::cout  << std::endl;
 
 	for (int i = 0; i < l.Get_Size() - 1; i++)
 	{
@@ -425,7 +418,7 @@ void DrawAllStud(List<Student>& l)
 		if (data.Get_Month() / 10 == 0) std::cout << "0";
 		std::cout << data.Get_Month() << ".";
 		std::cout << data.Get_Year();
-		std::cout << "|" << std::endl;
+		std::cout << std::endl;
 	}
 	char ch1;
 	std::cout << std::endl << std::endl << "Введите 0 чтобы вернуться назад" << std::endl;
@@ -438,7 +431,7 @@ void DrawAllStud(List<Student>& l)
 
 void DrawOneStud(Student& stud)
 {
-	system("cls");
+	//system("cls");
 	std::cout << "|"; std::cout.width(60); std::cout << "Фамалия Имя Отчество";
 	std::cout << "|"; std::cout.width(15); std::cout << "Пол";
 	std::cout << "|"; std::cout.width(25); std::cout << "Номер зачетки";
@@ -642,6 +635,63 @@ void IndividualTask(List<Student>& l)
 			}
 		}
 	}
+	
+	char ch[40];
+	do 
+	{
+		std::cout << "Производить выборку по\n 1 - мужчинам\n 2 - женщинам\n";
+		std::cin >> ch;
+		if (ch[0] == '1' || ch[0] == '2') break;
+	} while (1);
+
+
+
+	system("cls");
+
+	std::cout << "|"; std::cout.width(60); std::cout << "Фамалия Имя Отчество";
+	std::cout << "|"; std::cout.width(15); std::cout << "Пол";
+	std::cout << "|"; std::cout.width(25); std::cout << "Номер зачетки";
+	std::cout << "|"; std::cout.width(25); std::cout << "Отделение";
+	std::cout << "|"; std::cout.width(20); std::cout << "Факультет";
+	std::cout << "|"; std::cout.width(15); std::cout << "Группа";
+	std::cout << "|"; std::cout.width(5); std::cout << "Год поступления";
+	std::cout << "|"; std::cout.width(18); std::cout << "Год рождения";
+	std::cout << std::endl;
+
+	char flag;
+	if (ch[0] == '1') flag = 'м';
+	else flag = 'ж';
+
+	for (int i = 0; i < l.Get_Size() - 1; i++)
+	{
+		if (l[i].Get_Flor()[0] != flag) continue;
+		Burn data;
+		l[i].Get_Data(data);
+		std::cout << "|"; std::cout.width(20); std::cout << l[i].Get_FN();
+		std::cout.width(20); std::cout << l[i].Get_SN();
+		std::cout.width(20); std::cout << l[i].Get_TN();
+		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_Flor();
+		std::cout << "|"; std::cout.width(25); std::cout << l[i].Get_Num();
+		std::cout << "|"; std::cout.width(25); std::cout << l[i].Get_Dep();
+		std::cout << "|"; std::cout.width(20); std::cout << l[i].Get_Fac();
+		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_Gr();
+		std::cout << "|"; std::cout.width(15); std::cout << l[i].Get_EnterYear();
+		std::cout << "|"; std::cout.width(10);
+		if (data.Get_Day() / 10 == 0) std::cout << "0";
+		std::cout << data.Get_Day() << ".";
+		if (data.Get_Month() / 10 == 0) std::cout << "0";
+		std::cout << data.Get_Month() << ".";
+		std::cout << data.Get_Year();
+		std::cout << std::endl;
+	}
+	char ch1;
+	std::cout << std::endl << std::endl << "Введите 0 чтобы вернуться назад" << std::endl;
+	while (true)
+	{
+		std::cin >> ch1;
+		if (ch1 == '0') break;
+	}
+
 
 }
 
@@ -672,6 +722,7 @@ void menu()
 			system("cls");
 			std::cout << "Введите номер зачетки студента: ";
 			char numb[20] = {};
+			std::cin >> numb;
 			for (int i = 0; i < l.Get_Size(); i++)
 			{
 				if (!strcmp(numb, l[i].Get_Num()))
@@ -702,10 +753,15 @@ void menu()
 		{
 			std::cout << "Введите номер зачетки студента: ";
 			char numb[20] = {};
-			for (int i = 0; i < l.Get_Size(); i++)
+			std::cin >> numb;
+			char fiel[] = "f.txt";
+			for (int i = 0; i < l.Get_Size()-1; i++)
 			{
-				if (!strcmp(numb, l[i].Get_Num())) l[i].DeleteStudent(FielName);
+			    if(!strcmp(numb, l[i].Get_Num())) continue;
+				l[i].WriteInfoIntoFile(fiel);
 			}
+			remove(FielName);
+			rename(fiel, FielName);
 			break;
 		}
 		case 5:
@@ -727,6 +783,7 @@ void menu()
 		case 6:
 		{
 			NewStud(l);
+			break;
 		}
 		case 7:
 		{

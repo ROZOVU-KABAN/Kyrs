@@ -16,7 +16,6 @@ public:
 	void insert(T value, int index);
 	void push_front(T data);
 
-	/*void remuveAT(int index);*/
 	void pop_back();
 
 	T& operator[](const int index);

@@ -7,11 +7,14 @@ public:
 	Subject();
 	Subject(char name[],char mark);
 	~Subject();
+
 	char* Get_SubName() { return name; }
 	char Get_Mark() { return mark; }
+	
 	void Set_SubName(char name[]);
 	void Set_Mark(char mark);
 	void Set_All(char name[], char mark);
+
 private:
 
 	char name[30] = {};

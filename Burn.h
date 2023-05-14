@@ -9,11 +9,13 @@ public:
 	Burn(int day,int month,int year);
 	void Set_Data(int day, int month, int year);
 	void Set_Data(Burn& data);
+
 	void Get_Data(Burn& data);
 	int Get_Day() { return day; }
 	int Get_Month() { return month; }
 	int Get_Year() { return year; }
 	void Get_Data(int& day, int& month, int& year);
+
 	void Change_Day(int new_day);
 	void Change_Month(int new_month);
 	void Change_Year(int new_year);

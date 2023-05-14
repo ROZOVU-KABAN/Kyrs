@@ -18,6 +18,7 @@ public:
 private:
 	Subject subject[10];
 };
+
 Session::Session()
 {
 	for (int i = 0; i < 10; i++)
@@ -25,6 +26,7 @@ Session::Session()
 		subject[i].Set_All((char*)"-", '-');
 	}
 }
+
 Session::Session(Subject sub[])
 {
 	Set_Session(sub);
