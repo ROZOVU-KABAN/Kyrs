@@ -5,12 +5,12 @@ class Subject
 {
 public:
 	Subject();
-	Subject(char name[],char mark);
+	Subject(char name[], char mark);
 	~Subject();
 
 	char* Get_SubName() { return name; }
 	char Get_Mark() { return mark; }
-	
+
 	void Set_SubName(char name[]);
 	void Set_Mark(char mark);
 	void Set_All(char name[], char mark);
@@ -52,5 +52,4 @@ inline void Subject::Set_All(char name[], char mark)
 	Set_Mark(mark);
 	Set_SubName(name);
 }
-
 

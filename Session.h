@@ -62,4 +62,3 @@ void Session::Get_AllSub(Subject sub[])
 		sub[i].Set_SubName(subject[i].Get_SubName());
 	}
 }
-

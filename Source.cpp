@@ -656,6 +656,7 @@ void IndividualTask(List<Student>& l)
 	std::cout << "|"; std::cout.width(15); std::cout << "Группа";
 	std::cout << "|"; std::cout.width(5); std::cout << "Год поступления";
 	std::cout << "|"; std::cout.width(18); std::cout << "Год рождения";
+	std::cout << "|"; std::cout.width(10); std::cout << "Ср б";
 	std::cout << std::endl;
 
 	char flag;
@@ -681,7 +682,8 @@ void IndividualTask(List<Student>& l)
 		std::cout << data.Get_Day() << ".";
 		if (data.Get_Month() / 10 == 0) std::cout << "0";
 		std::cout << data.Get_Month() << ".";
-		std::cout << data.Get_Year();
+		std::cout << data.Get_Year()<<" ";
+		std::cout<< l[i].Get_Sr_Ball();
 		std::cout << std::endl;
 	}
 	char ch1;
